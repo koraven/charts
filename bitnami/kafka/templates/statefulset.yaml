@@ -183,28 +183,12 @@ spec:
               {{- end }}
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: {{ .Values.interBrokerListenerName | quote }}
-            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-              {{- if .Values.listenerSecurityProtocolMap }}
-              value: {{ .Values.listenerSecurityProtocolMap | quote }}
-              {{- else if .Values.externalAccess.enabled }}
-              value: "INTERNAL:{{ $interBrokerProtocol }},CLIENT:{{ $clientProtocol }},EXTERNAL:{{ $externalClientProtocol }}"
-              {{- else }}
-              value: "INTERNAL:{{ $interBrokerProtocol }},CLIENT:{{ $clientProtocol }}"
-              {{- end }}
             {{- if or ($clientProtocol | regexFind "SASL") ($externalClientProtocol | regexFind "SASL") ($interBrokerProtocol | regexFind "SASL") .Values.auth.sasl.jaas.zookeeperUser }}
             - name: KAFKA_CFG_SASL_ENABLED_MECHANISMS
               value: {{ upper .Values.auth.sasl.mechanisms | quote }}
             - name: KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL
               value: {{ upper .Values.auth.sasl.interBrokerMechanism | quote }}
             {{- end }}
-            - name: KAFKA_CFG_LISTENERS
-              {{- if .Values.listeners }}
-              value: {{ join "," .Values.listeners }}
-              {{- else if .Values.externalAccess.enabled }}
-              value: "INTERNAL://:{{ .Values.containerPorts.internal }},CLIENT://:{{ .Values.containerPorts.client }},EXTERNAL://:{{ .Values.containerPorts.external }}"
-              {{- else }}
-              value: "INTERNAL://:{{ .Values.containerPorts.internal }},CLIENT://:{{ .Values.containerPorts.client }}"
-              {{- end }}
             {{- if .Values.externalAccess.enabled }}
             {{- if .Values.externalAccess.autoDiscovery.enabled }}
             - name: SHARED_FILE
