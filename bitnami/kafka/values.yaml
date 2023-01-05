@@ -1698,6 +1698,22 @@ provisioning:
   ##
   waitForKafka: true
 
+## @section Kraft chart parameters
+
+## Kraft chart configuration
+## ...
+##
+kraft:
+  enabled: false
+  controllerPort: 9095
+  minNodeId: 0
+  processRoles: broker,controller
+  controllerListenerNames: CONTROLLER
+  clusterId: "k2yipv1sRue7z2_Y3o976A"
+  controllerProtocol: plaintext
+
+
+
 ## @section ZooKeeper chart parameters
 
 ## ZooKeeper chart configuration

@@ -78,21 +78,19 @@ data:
     ID="${MY_POD_NAME#"{{ $fullname }}-"}"
     # If process.roles is not set at all, it is assumed to be in ZooKeeper mode.
     # https://kafka.apache.org/documentation/#kraft_role
-    if [[ $KAFKA_CFG_PROCESS_ROLES == "" ]]; then
-        if [[ -f "{{ .Values.logsDirs | splitList "," | first }}/meta.properties" ]]; then
+    
+    if [[ -f "{{ .Values.logsDirs | splitList "," | first }}/meta.properties" ]]; then
+        if [[ $KAFKA_CFG_PROCESS_ROLES == "" ]]; then
             export KAFKA_CFG_BROKER_ID="$(grep "broker.id" "{{ .Values.logsDirs | splitList "," | first }}/meta.properties" | awk -F '=' '{print $2}')"
         else
-            export KAFKA_CFG_BROKER_ID="$((ID + {{ .Values.minBrokerId }}))"
+            export KAFKA_CFG_BROKER_ID="$(grep "node.id" "{{ .Values.logsDirs | splitList "," | first }}/meta.properties" | awk -F '=' '{print $2}')"
         fi
     else
-        if [[ -f "{{ .Values.logsDirs | splitList "," | first }}/meta.properties" ]]; then
-            export KAFKA_CFG_NODE_ID="$(grep "node.id" "{{ .Values.logsDirs | splitList "," | first }}/meta.properties" | awk -F '=' '{print $2}')"
-        else
-            export KAFKA_CFG_NODE_ID="$((ID + {{ .Values.minNodeId }}))"
-        fi
+        export KAFKA_CFG_BROKER_ID="$((ID + {{ .Values.minBrokerId }}))"
     fi
+
     if [[ $KAFKA_CFG_PROCESS_ROLES == *"controller"* ]]; then
-        node_id={{ .Values.minNodeId }}
+        node_id={{ .Values.minBrokerId }}
         pod_id=0
         while :
         do 
