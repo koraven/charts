@@ -208,15 +208,15 @@ spec:
               {{- if .Values.listeners }}
               value: {{ join "," .Values.listeners }}
               {{- else if .Values.externalAccess.enabled }}
-              value: "INTERNAL://:{{ $interBrokerPort }},CLIENT://:9092,EXTERNAL://:9094"
+              value: "INTERNAL://:{{ .Values.containerPorts.internal }},CLIENT://:{{ .Values.containerPorts.client }},EXTERNAL://:{{ .Values.containerPorts.external }}"
               {{- else if .Values.kraft.enabled }}
                 {{- if .Values.externalAccess.enabled }}
-              value: "INTERNAL:{{ $interBrokerPort }},CLIENT://:9092,CONTROLLER://:{{ .Values.kraft.controllerPort }},EXTERNAL://:9094"
+              value: "INTERNAL:{{ .Values.containerPorts.internal }},CLIENT://:{{ .Values.containerPorts.client }},CONTROLLER://:{{ .Values.kraft.controllerPort }},EXTERNAL://:{{ .Values.containerPorts.external }}"
                 {{- else }}
-              value: "INTERNAL://:{{ $interBrokerPort }},CLIENT://:9092,CONTROLLER://:{{ .Values.kraft.controllerPort }}"
+              value: "INTERNAL://:{{ .Values.containerPorts.internal }},CLIENT://:{{ .Values.containerPorts.client }},CONTROLLER://:{{ .Values.kraft.controllerPort }}"
                 {{- end }}
               {{- else }}
-              value: "INTERNAL://:{{ $interBrokerPort }},CLIENT://:9092"
+              value: "INTERNAL://:{{ .Values.containerPorts.internal }},CLIENT://:{{ .Values.containerPorts.client }}"
               {{- end }}            
             {{- if .Values.externalAccess.enabled }}
             {{- if .Values.externalAccess.autoDiscovery.enabled }}
