@@ -235,7 +235,7 @@ auth:
   # https://github.com/bitnami/charts/pull/8902/
   externalClientProtocol: ""
   interBrokerProtocol: plaintext
-  ## @param kraft.controllerProtocol Controller protocol. It is used with Kraft mode only.
+  ## @param auth.controllerProtocol Controller protocol. It is used with Kraft mode only.
   ##
   controllerProtocol: plaintext
   ## SASL configuration
